@@ -42,12 +42,14 @@ export interface CanvasProps {
   width: string;
   height: string;
   canvasColor: string;
+  strokeColor: string;
   backgroundImage: string;
   exportWithBackgroundImage: boolean;
   preserveBackgroundImageAspectRatio: string;
   allowOnlyPointerType: string;
   style: React.CSSProperties;
   svgStyle: React.CSSProperties;
+  invert?: boolean;
 }
 
 export interface CanvasRef {
@@ -67,6 +69,7 @@ export const Canvas = React.forwardRef<CanvasRef, CanvasProps>((props, ref) => {
     height = "100%",
     className = "react-sketch-canvas",
     canvasColor = "red",
+    strokeColor = "black",
     backgroundImage = "",
     exportWithBackgroundImage = false,
     preserveBackgroundImageAspectRatio = "none",
@@ -76,6 +79,7 @@ export const Canvas = React.forwardRef<CanvasRef, CanvasProps>((props, ref) => {
       borderRadius: "0.25rem",
     },
     svgStyle = {},
+    invert = false,
   } = props;
 
   const canvasRef = React.useRef<HTMLDivElement>(null);
@@ -318,84 +322,188 @@ release drawing even when point goes out of canvas */
         }}
         id={id}
       >
-        <g id={`${id}__eraser-stroke-group`} display="none">
-          <rect
-            id={`${id}__mask-background`}
-            x="0"
-            y="0"
-            width="100%"
-            height="100%"
-            fill="white"
-          />
-          {eraserPaths.map((eraserPath, i) => (
-            <SvgPath
-              key={`${id}__eraser-${i}`}
-              id={`${id}__eraser-${i}`}
-              paths={eraserPath.paths}
-              strokeColor="#000000"
-              strokeWidth={eraserPath.strokeWidth}
-            />
-          ))}
-        </g>
-        <defs>
-          {backgroundImage && (
-            <pattern
-              id={`${id}__background`}
+        {invert ? (
+          <>
+            <mask id="main-mask">
+              <g id={`${id}__eraser-stroke-group`} display="none">
+                <rect
+                  id={`${id}__mask-background`}
+                  x="0"
+                  y="0"
+                  width="100%"
+                  height="100%"
+                  fill="white"
+                />
+                {eraserPaths.map((eraserPath, i) => (
+                  <SvgPath
+                    key={`${id}__eraser-${i}`}
+                    id={`${id}__eraser-${i}`}
+                    paths={eraserPath.paths}
+                    strokeColor="#000000"
+                    strokeWidth={eraserPath.strokeWidth}
+                  />
+                ))}
+              </g>
+              <defs>
+                {backgroundImage && (
+                  <pattern
+                    id={`${id}__background`}
+                    x="0"
+                    y="0"
+                    width="100%"
+                    height="100%"
+                    patternUnits="userSpaceOnUse"
+                  >
+                    <image
+                      x="0"
+                      y="0"
+                      width="100%"
+                      height="100%"
+                      xlinkHref={backgroundImage}
+                      preserveAspectRatio={preserveBackgroundImageAspectRatio}
+                    />
+                  </pattern>
+                )}
+
+                {eraserPaths.map((_, i) => (
+                  <mask
+                    id={`${id}__eraser-mask-${i}`}
+                    key={`${id}__eraser-mask-${i}`}
+                    maskUnits="userSpaceOnUse"
+                  >
+                    <use href={`#${id}__mask-background`} />
+                    {Array.from(
+                      { length: eraserPaths.length - i },
+                      (_i, j) => j + i
+                    ).map((k) => (
+                      <use
+                        key={k.toString()}
+                        href={`#${id}__eraser-${k.toString()}`}
+                      />
+                    ))}
+                  </mask>
+                ))}
+              </defs>
+              <g id={`${id}__canvas-background-group`}>
+                <rect
+                  id={`${id}__canvas-background`}
+                  x="0"
+                  y="0"
+                  width="100%"
+                  height="100%"
+                  fill={
+                    backgroundImage ? `url(#${id}__background)` : canvasColor
+                  }
+                />
+              </g>
+              {pathGroups.map((pathGroup, i) => (
+                <g
+                  id={`${id}__stroke-group-${i}`}
+                  key={`${id}__stroke-group-${i}`}
+                  mask={`${eraserPaths[i] && `url(#${id}__eraser-mask-${i})`}`}
+                >
+                  <Paths
+                    id={`${id}__stroke-group-${i}__paths`}
+                    paths={pathGroup}
+                  />
+                </g>
+              ))}
+            </mask>
+            <rect
+              id={`${id}__invert-background`}
               x="0"
               y="0"
               width="100%"
               height="100%"
-              patternUnits="userSpaceOnUse"
-            >
-              <image
+              fill={strokeColor}
+              mask="url(#main-mask)"
+            />
+          </>
+        ) : (
+          <>
+            <g id={`${id}__eraser-stroke-group`} display="none">
+              <rect
+                id={`${id}__mask-background`}
                 x="0"
                 y="0"
                 width="100%"
                 height="100%"
-                xlinkHref={backgroundImage}
-                preserveAspectRatio={preserveBackgroundImageAspectRatio}
+                fill="white"
               />
-            </pattern>
-          )}
-
-          {eraserPaths.map((_, i) => (
-            <mask
-              id={`${id}__eraser-mask-${i}`}
-              key={`${id}__eraser-mask-${i}`}
-              maskUnits="userSpaceOnUse"
-            >
-              <use href={`#${id}__mask-background`} />
-              {Array.from(
-                { length: eraserPaths.length - i },
-                (_i, j) => j + i
-              ).map((k) => (
-                <use
-                  key={k.toString()}
-                  href={`#${id}__eraser-${k.toString()}`}
+              {eraserPaths.map((eraserPath, i) => (
+                <SvgPath
+                  key={`${id}__eraser-${i}`}
+                  id={`${id}__eraser-${i}`}
+                  paths={eraserPath.paths}
+                  strokeColor="#000000"
+                  strokeWidth={eraserPath.strokeWidth}
                 />
               ))}
-            </mask>
-          ))}
-        </defs>
-        <g id={`${id}__canvas-background-group`}>
-          <rect
-            id={`${id}__canvas-background`}
-            x="0"
-            y="0"
-            width="100%"
-            height="100%"
-            fill={backgroundImage ? `url(#${id}__background)` : canvasColor}
-          />
-        </g>
-        {pathGroups.map((pathGroup, i) => (
-          <g
-            id={`${id}__stroke-group-${i}`}
-            key={`${id}__stroke-group-${i}`}
-            mask={`${eraserPaths[i] && `url(#${id}__eraser-mask-${i})`}`}
-          >
-            <Paths id={`${id}__stroke-group-${i}__paths`} paths={pathGroup} />
-          </g>
-        ))}
+            </g>
+            <defs>
+              {backgroundImage && (
+                <pattern
+                  id={`${id}__background`}
+                  x="0"
+                  y="0"
+                  width="100%"
+                  height="100%"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <image
+                    x="0"
+                    y="0"
+                    width="100%"
+                    height="100%"
+                    xlinkHref={backgroundImage}
+                    preserveAspectRatio={preserveBackgroundImageAspectRatio}
+                  />
+                </pattern>
+              )}
+
+              {eraserPaths.map((_, i) => (
+                <mask
+                  id={`${id}__eraser-mask-${i}`}
+                  key={`${id}__eraser-mask-${i}`}
+                  maskUnits="userSpaceOnUse"
+                >
+                  <use href={`#${id}__mask-background`} />
+                  {Array.from(
+                    { length: eraserPaths.length - i },
+                    (_i, j) => j + i
+                  ).map((k) => (
+                    <use
+                      key={k.toString()}
+                      href={`#${id}__eraser-${k.toString()}`}
+                    />
+                  ))}
+                </mask>
+              ))}
+            </defs>
+            <g id={`${id}__canvas-background-group`}>
+              <rect
+                id={`${id}__canvas-background`}
+                x="0"
+                y="0"
+                width="100%"
+                height="100%"
+                fill={backgroundImage ? `url(#${id}__background)` : canvasColor}
+              />
+            </g>
+            {pathGroups.map((pathGroup, i) => (
+              <g
+                id={`${id}__stroke-group-${i}`}
+                key={`${id}__stroke-group-${i}`}
+                mask={`${eraserPaths[i] && `url(#${id}__eraser-mask-${i})`}`}
+              >
+                <Paths
+                  id={`${id}__stroke-group-${i}__paths`}
+                  paths={pathGroup}
+                />
+              </g>
+            ))}
+          </>
+        )}
       </svg>
     </div>
   );
