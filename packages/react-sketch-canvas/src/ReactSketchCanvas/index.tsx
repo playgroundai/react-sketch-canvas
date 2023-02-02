@@ -21,6 +21,7 @@ export interface ReactSketchCanvasProps {
   svgStyle?: React.CSSProperties;
   width?: string;
   withTimestamp?: boolean;
+  invert?: boolean;
 }
 
 export interface ReactSketchCanvasRef {
@@ -61,6 +62,7 @@ export const ReactSketchCanvas = React.forwardRef<
     onChange = (_paths: CanvasPath[]): void => undefined,
     onStroke = (_path: CanvasPath, _isEraser: boolean): void => undefined,
     withTimestamp = false,
+    invert = false,
   } = props;
 
   const svgCanvas = React.createRef<CanvasRef>();
@@ -265,6 +267,7 @@ export const ReactSketchCanvas = React.forwardRef<
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
+      invert={invert}
     />
   );
 });

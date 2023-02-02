@@ -75,6 +75,7 @@ function App() {
     exportWithBackgroundImage: true,
     withTimestamp: true,
     allowOnlyPointerType: "all",
+    invert: false,
   });
 
   const inputProps: Array<[keyof ReactSketchCanvasProps, "text" | "number"]> = [
@@ -276,6 +277,28 @@ function App() {
                     );
                   }}
                 />
+              </div>
+            </div>
+            <div className="p-2 col-10">
+              <div className="form-check form-switch">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="switchInvert"
+                  checked={canvasProps.invert}
+                  onChange={(e) => {
+                    setCanvasProps(
+                      (prevCanvasProps: Partial<ReactSketchCanvasProps>) => ({
+                        ...prevCanvasProps,
+                        invert: e.target.checked,
+                      })
+                    );
+                  }}
+                />
+                <label className="form-check-label" htmlFor="switchInvert">
+                  invert
+                </label>
               </div>
             </div>
             <div className="p-2 col-10">

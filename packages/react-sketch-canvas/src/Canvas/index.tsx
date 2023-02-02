@@ -48,6 +48,7 @@ export interface CanvasProps {
   allowOnlyPointerType: string;
   style: React.CSSProperties;
   svgStyle: React.CSSProperties;
+  invert?: boolean;
 }
 
 export interface CanvasRef {
@@ -76,6 +77,7 @@ export const Canvas = React.forwardRef<CanvasRef, CanvasProps>((props, ref) => {
       borderRadius: "0.25rem",
     },
     svgStyle = {},
+    invert = false,
   } = props;
 
   const canvasRef = React.useRef<HTMLDivElement>(null);
@@ -318,6 +320,17 @@ release drawing even when point goes out of canvas */
         }}
         id={id}
       >
+        <defs>
+          <filter id="invert-alpha">
+            <feColorMatrix
+              type="matrix"
+              values="1 0 0 0 0
+                      0 1 0 0 0
+                      0 0 1 0 0
+                      0 0 0 -1 1"
+            />
+          </filter>
+        </defs>
         <g id={`${id}__eraser-stroke-group`} display="none">
           <rect
             id={`${id}__mask-background`}
@@ -387,15 +400,33 @@ release drawing even when point goes out of canvas */
             fill={backgroundImage ? `url(#${id}__background)` : canvasColor}
           />
         </g>
-        {pathGroups.map((pathGroup, i) => (
-          <g
-            id={`${id}__stroke-group-${i}`}
-            key={`${id}__stroke-group-${i}`}
-            mask={`${eraserPaths[i] && `url(#${id}__eraser-mask-${i})`}`}
-          >
-            <Paths id={`${id}__stroke-group-${i}__paths`} paths={pathGroup} />
+        {invert && (
+          <g filter="url(#invert-alpha)">
+            <rect x="0" y="0" width="100%" height="100%" fill="none" />
+            {pathGroups.map((pathGroup, i) => (
+              <g
+                id={`${id}__stroke-group-${i}`}
+                key={`${id}__stroke-group-${i}`}
+                mask={`${eraserPaths[i] && `url(#${id}__eraser-mask-${i})`}`}
+              >
+                <Paths
+                  id={`${id}__stroke-group-${i}__paths`}
+                  paths={pathGroup}
+                />
+              </g>
+            ))}
           </g>
-        ))}
+        )}
+        {invert ||
+          pathGroups.map((pathGroup, i) => (
+            <g
+              id={`${id}__stroke-group-${i}`}
+              key={`${id}__stroke-group-${i}`}
+              mask={`${eraserPaths[i] && `url(#${id}__eraser-mask-${i})`}`}
+            >
+              <Paths id={`${id}__stroke-group-${i}__paths`} paths={pathGroup} />
+            </g>
+          ))}
       </svg>
     </div>
   );
