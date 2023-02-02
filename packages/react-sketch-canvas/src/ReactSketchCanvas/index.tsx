@@ -15,7 +15,9 @@ export interface ReactSketchCanvasProps {
   onChange?: (updatedPaths: CanvasPath[]) => void;
   onStroke?: (path: CanvasPath, isEraser: boolean) => void;
   preserveBackgroundImageAspectRatio?: string;
-  strokeColor?: string;
+  strokeRed?: number;
+  strokeBlue?: number;
+  strokeGreen?: number;
   strokeWidth?: number;
   style?: React.CSSProperties;
   svgStyle?: React.CSSProperties;
@@ -47,7 +49,9 @@ export const ReactSketchCanvas = React.forwardRef<
     height = "100%",
     className = "",
     canvasColor = "white",
-    strokeColor = "red",
+    strokeRed = 140,
+    strokeGreen = 6,
+    strokeBlue = 30,
     backgroundImage = "",
     exportWithBackgroundImage = false,
     preserveBackgroundImageAspectRatio = "none",
@@ -64,6 +68,10 @@ export const ReactSketchCanvas = React.forwardRef<
     withTimestamp = false,
     invert = false,
   } = props;
+
+  const strokeColor = React.useMemo(() => {
+    return `rgb(${strokeRed}, ${strokeGreen}, ${strokeBlue})`;
+  }, [strokeRed, strokeGreen, strokeBlue]);
 
   const svgCanvas = React.createRef<CanvasRef>();
   const [drawMode, setDrawMode] = React.useState<boolean>(true);
@@ -256,6 +264,9 @@ export const ReactSketchCanvas = React.forwardRef<
       height={height}
       className={className}
       canvasColor={canvasColor}
+      strokeRed={strokeRed}
+      strokeGreen={strokeGreen}
+      strokeBlue={strokeBlue}
       backgroundImage={backgroundImage}
       exportWithBackgroundImage={exportWithBackgroundImage}
       preserveBackgroundImageAspectRatio={preserveBackgroundImageAspectRatio}

@@ -42,6 +42,9 @@ export interface CanvasProps {
   width: string;
   height: string;
   canvasColor: string;
+  strokeRed: number;
+  strokeBlue: number;
+  strokeGreen: number;
   backgroundImage: string;
   exportWithBackgroundImage: boolean;
   preserveBackgroundImageAspectRatio: string;
@@ -68,6 +71,9 @@ export const Canvas = React.forwardRef<CanvasRef, CanvasProps>((props, ref) => {
     height = "100%",
     className = "react-sketch-canvas",
     canvasColor = "red",
+    strokeRed = 255,
+    strokeBlue = 0,
+    strokeGreen = 0,
     backgroundImage = "",
     exportWithBackgroundImage = false,
     preserveBackgroundImageAspectRatio = "none",
@@ -324,10 +330,11 @@ release drawing even when point goes out of canvas */
           <filter id="invert-alpha">
             <feColorMatrix
               type="matrix"
-              values="1 0 0 0 0
-                      0 1 0 0 0
-                      0 0 1 0 0
-                      0 0 0 -1 1"
+              colorInterpolationFilters="sRGB"
+              values={`1 0 0 0 ${strokeRed / 255}
+                      0 1 0 0 ${strokeGreen / 255}
+                      0 0 1 0 ${strokeBlue / 255}
+                      0 0 0 -1 1`}
             />
           </filter>
         </defs>
@@ -402,7 +409,7 @@ release drawing even when point goes out of canvas */
         </g>
         {invert && (
           <g filter="url(#invert-alpha)">
-            <rect x="0" y="0" width="100%" height="100%" fill="none" />
+            <rect x="-1" y="-1" width="200%" height="200%" fill="none" />
             {pathGroups.map((pathGroup, i) => (
               <g
                 id={`${id}__stroke-group-${i}`}
