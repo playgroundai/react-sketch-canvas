@@ -443,7 +443,7 @@ var Canvas = React2.forwardRef((props, ref) => {
           fill: backgroundImage ? `url(#${id}__background)` : canvasColor
         }
       )),
-      invert && /* @__PURE__ */ React2.createElement("g", { filter: "url(#invert-alpha)" }, /* @__PURE__ */ React2.createElement("rect", { x: "-1", y: "-1", width: "200%", height: "200%", fill: "none" }), pathGroups.map((pathGroup, i) => /* @__PURE__ */ React2.createElement(
+      invert && /* @__PURE__ */ React2.createElement("g", { filter: "url(#invert-alpha)" }, /* @__PURE__ */ React2.createElement("rect", { x: "-1", y: "-1", width: "200%", height: "200%", fill: "none", stroke: "white", strokeWidth: 1 }), pathGroups.map((pathGroup, i) => /* @__PURE__ */ React2.createElement(
         "g",
         {
           id: `${id}__stroke-group-${i}`,
