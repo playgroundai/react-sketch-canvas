@@ -8473,9 +8473,9 @@ var Z = (cov_1qdynj1k2t().s[88]++, i.forwardRef((t, e) => {
     id: "invert-alpha"
   }, i.createElement("feColorMatrix", {
     type: "matrix",
-    values: `1 0 0 0 0
-                      0 1 0 0 0
-                      0 0 1 0 0
+    values: `1 0 0 0 140
+                      0 1 0 0 6
+                      0 0 1 0 30
                       0 0 0 -1 1`
   }))), i.createElement("g", {
     id: `${c}__eraser-stroke-group`,
