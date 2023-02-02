@@ -7701,11 +7701,12 @@ var oe = (cov_1u5jj4wowu().s[63]++, s.forwardRef((a, e) => {
   })), (cov_1u5jj4wowu().b[50][0]++, D) && (cov_1u5jj4wowu().b[50][1]++, s.createElement("g", {
     filter: "url(#invert-alpha)"
   }, s.createElement("rect", {
-    x: "0",
-    y: "0",
-    width: "100%",
-    height: "100%",
-    fill: "none"
+    x: "-1",
+    y: "-1",
+    width: "200%",
+    height: "200%",
+    fill: "none",
+    stroke: "black",
   }), A.map((r, o) => {
     cov_1u5jj4wowu().f[38]++;
     cov_1u5jj4wowu().s[134]++;

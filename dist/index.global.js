@@ -14698,11 +14698,12 @@ cov_1pan43p0z8().s[0]++;
     })), (cov_1pan43p0z8().b[115][0]++, A) && (cov_1pan43p0z8().b[115][1]++, l.createElement("g", {
       filter: "url(#invert-alpha)"
     }, l.createElement("rect", {
-      x: "0",
-      y: "0",
-      width: "100%",
-      height: "100%",
-      fill: "none"
+      x: "-1",
+      y: "-1",
+      width: "200%",
+      height: "200%",
+      fill: "none",
+      stroke: "black",
     }), H.map((a, i) => {
       cov_1pan43p0z8().f[100]++;
       cov_1pan43p0z8().s[352]++;

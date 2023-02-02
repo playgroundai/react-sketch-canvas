@@ -8547,11 +8547,12 @@ var Z = (cov_1qdynj1k2t().s[88]++, i.forwardRef((t, e) => {
   })), (cov_1qdynj1k2t().b[57][0]++, D) && (cov_1qdynj1k2t().b[57][1]++, i.createElement("g", {
     filter: "url(#invert-alpha)"
   }, i.createElement("rect", {
-    x: "0",
-    y: "0",
-    width: "100%",
-    height: "100%",
-    fill: "none"
+    x: "-1",
+    y: "-1",
+    width: "200%",
+    height: "200%",
+    fill: "none",
+    stroke: "black",
   }), A.map((o, n) => {
     cov_1qdynj1k2t().f[45]++;
     cov_1qdynj1k2t().s[159]++;
