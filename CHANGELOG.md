@@ -1,5 +1,12 @@
 # Changelog
 
+## 7.0.0-next.0
+
+### Major Changes
+
+- - Add option to use Windows surface pen button as eraser
+  - Memoize functions to reduce re-rendering
+
 # [6.1.0]
 
 ### Added
