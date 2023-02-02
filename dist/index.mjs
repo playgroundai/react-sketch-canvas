@@ -7627,10 +7627,11 @@ var oe = (cov_1u5jj4wowu().s[63]++, s.forwardRef((a, e) => {
     id: "invert-alpha"
   }, s.createElement("feColorMatrix", {
     type: "matrix",
-    values: `1 0 0 0 140
-                      0 1 0 0 6
-                      0 0 1 0 30
-                      0 0 0 -1 1`
+    colorInterpolationFilters: "sRGB",
+    values: `1 0 0 0 0.55
+                    0 1 0 0 0.02
+                    0 0 1 0 0.12
+                    0 0 0 -1 1`
   }))), s.createElement("g", {
     id: `${i}__eraser-stroke-group`,
     display: "none"
